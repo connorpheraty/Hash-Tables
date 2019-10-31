@@ -12,9 +12,10 @@ class HashTable:
     A hash table that with `capacity` buckets
     that accepts string keys
     '''
-    def __init__(self, capacity):
+    def __init__(self, capacity=8):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+        self.count = 0
 
 
     def _hash(self, key):
@@ -32,8 +33,13 @@ class HashTable:
 
         OPTIONAL STRETCH: Research and implement DJB2
         '''
-        pass
+        # Start with arbitrary large prime
+        have_value = 5381
 
+        # Bit-shift and sum value for each character
+        for char in key:
+            hash_value = ((hash_value << 5) + hash_value) + char
+        return hash_value
 
     def _hash_mod(self, key):
         '''
@@ -51,9 +57,21 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # Check if there's room in our storage
+        if self.count >= self.capacity:
+            print("ERROR: Array is full")
+            arr.double_size()
+        
+        # Shift everything to the right of index to the right
+        # Start from the end to prevent overwriting values
+        for i in range(self.count, index, -1):
+            self.storage[i] = self.storage[i, -1]
+        
+        # Insert our value
+        self.storage[index] = value
 
-
+        # Increment count
+        self.count += 1
 
     def remove(self, key):
         '''
@@ -63,6 +81,7 @@ class HashTable:
 
         Fill this in.
         '''
+
         pass
 
 
@@ -74,7 +93,7 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        return self.storage[key]
 
 
     def resize(self):
@@ -84,7 +103,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        new_storage = [None] * self.capactiy
+
+        for i in range(self.count):
+            new_storage[i] = self.storage[i]
+
+            self.storage = new_storage
+
 
 
 
@@ -115,3 +141,4 @@ if __name__ == "__main__":
     print(ht.retrieve("line_3"))
 
     print("")
+ 
